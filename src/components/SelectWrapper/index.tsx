@@ -3,7 +3,7 @@
 import React, { ReactNode } from 'react';
 import { FormControl, InputLabel, Select, FormHelperText, MenuItem } from '@mui/material';
 import { WrappedFieldProps } from 'redux-form';
-import { Category } from '../FirstStep/FirstStepForm';
+import { Category } from '../FirstStep/types/types';
 
 interface SelectWrapperProps extends WrappedFieldProps {
   label: string;
@@ -24,7 +24,7 @@ const SelectWrapper: React.FC<SelectWrapperProps> = ({
       <MenuItem value="">
         Seçiniz...
       </MenuItem>
-      {categories?.map((category: any) => (
+      {categories?.map((category: Category) => (
         <MenuItem value={category.value} key={category.value}>
           {category.label}
         </MenuItem>

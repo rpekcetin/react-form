@@ -1,115 +1,112 @@
 import React from 'react';
-import { Field, reduxForm, InjectedFormProps, formValueSelector } from 'redux-form';
-import { Box, Button } from '@mui/material'
+import { Field, reduxForm, formValueSelector } from 'redux-form';
 import TextFieldWrapper from '../TextFieldWrapper'
 import SelectWrapper from '../SelectWrapper'
 import { connect } from 'react-redux';
+import ButtonGroup from '../ButtonGroup'
+import { Grid } from '@mui/material';
+import { DeliveryFormData, OwnProps, Props } from './types/types';
 
-interface DeliveryFormData {
-    deliveryMethod: string;
-    shippingFee?: number;
-    shippingCompany?: string
-    deliveryAddress: string
-    returnOption: string;
-}
-
-interface OwnProps {
-    activeStep: number;
-    setActiveStep: React.Dispatch<React.SetStateAction<number>>;
-    handleBack: () => void;
-    handleNext: () => void;
-    finished: boolean;
-    deliveryMethod?: string
-}
-
-type Props = OwnProps & InjectedFormProps<DeliveryFormData, OwnProps>;
-const ThirdStepForm: React.FC<Props> = ({
+const FourthStepForm: React.FC<Props> = ({
     handleSubmit,
     handleNext,
     finished,
     handleBack,
     activeStep,
-    deliveryMethod
+    deliveryMethod,
+    returnOption
 }) => (
     <form onSubmit={handleSubmit(handleNext)}>
-        <Field
-            name="deliveryMethod"
-            component={SelectWrapper}
-            label="Teslimat Şekli"
-            required
-            categories={[
-                { value: 'cargo', label: 'Kargo' },
-                { value: 'digitalDownload', label: 'Dijital İndirme' },
-            ]}
-        />
-        <Field
-            name="returnOption"
-            component={SelectWrapper}
-            label="İade Seçenekleri"
-            required
-            categories={[
-                { value: 'returnable', label: 'İade Edilebilir' },
-                { value: 'nonReturnable', label: 'İade Edilemez' },
-            ]}
-        />
-        {deliveryMethod === 'cargo' && (
-            <div>
+        <Grid container spacing={3} px={5} py={12} justifyContent={'center'} alignItems={'flex-start'}>
+            <Grid item xs={12} md={6}>
                 <Field
-                    name="shippingCompany"
+                    name="deliveryMethod"
                     component={SelectWrapper}
-                    label="Kargo Şirketi"
+                    label="Teslimat Şekli"
                     required
                     categories={[
-                        { value: 'ups', label: 'UPS' },
-                        { value: 'fedex', label: 'FedEx' },
-                        { value: 'dhl', label: 'DHL' },
+                        { value: 'cargo', label: 'Kargo' },
+                        { value: 'digitalDownload', label: 'Dijital İndirme' },
                     ]}
-                >
-                </Field>
-                <Field
-                    name="shippingFee"
-                    component={TextFieldWrapper}
-                    label="Kargo Ücreti"
-                    type="number"
-                    parse={(value: any) => Number(value)}
                 />
-            </div>
-        )}
-        <div>
-            <Field
-                name="deliveryAddress"
-                component={TextFieldWrapper}
-                label="Gönderim Adresi"
-                required
-                multiline
-                rows={5}
-            />
-        </div>
-        <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Button
-                color="inherit"
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                sx={{ mr: 1 }}
-            >
-                Back
-            </Button>
-            <Box sx={{ flex: '1 1 auto' }} />
-            <Button type='submit'>
-                {finished ? 'Finish' : 'Next'}
-            </Button>
-        </Box>
-    </form>
+            </Grid>
+            <Grid item xs={12} md={6}>
+                <Field
+                    name="returnOption"
+                    component={SelectWrapper}
+                    label="İade Seçenekleri"
+                    required
+                    categories={[
+                        { value: 'returnable', label: 'İade Edilebilir' },
+                        { value: 'nonReturnable', label: 'İade Edilemez' },
+                    ]}
+                />
+            </Grid>
+            {deliveryMethod === 'cargo' && (
+                <>
+                    <Grid item xs={12} md={6}>
+                        <Field
+                            name="shippingCompany"
+                            component={SelectWrapper}
+                            label="Kargo Şirketi"
+                            required
+                            categories={[
+                                { value: 'ups', label: 'UPS' },
+                                { value: 'fedex', label: 'FedEx' },
+                                { value: 'dhl', label: 'DHL' },
+                            ]}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <Field
+                            name="shippingFee"
+                            component={TextFieldWrapper}
+                            label="Kargo Ücreti"
+                            type="number"
+                            required
+                            parse={(value: any) => Number(value)}
+                        />
+                    </Grid>
+                </>
+            )}
+
+            {
+                returnOption === 'returnable' && (
+                    <Grid item xs={12} md={6}>
+                        <Field
+                            name="returnPeriod"
+                            component={TextFieldWrapper}
+                            label="İade Süresi (Gün)"
+                            type="number"
+                            required
+                        />
+                    </Grid>
+                )
+            }
+            <Grid item xs={12}>
+                <Field
+                    name="deliveryAddress"
+                    component={TextFieldWrapper}
+                    label="Gönderim Adresi"
+                    required
+                    multiline
+                    rows={5}
+                />
+            </Grid>
+            <ButtonGroup handleBack={handleBack} activeStep={activeStep} finished={finished} />
+        </Grid>
+    </form >
 );
 
 const ReduxFormWrapped = reduxForm<DeliveryFormData, OwnProps>({
-    form: 'thirdForm',
+    form: 'fourthForm',
     destroyOnUnmount: false,
-})(ThirdStepForm);
+})(FourthStepForm);
 
 const mapStateToProps = (state: any) => {
-    const deliveryMethod = formValueSelector('thirdForm')(state, 'deliveryMethod');
-    return { deliveryMethod };
+    const deliveryMethod = formValueSelector('fourthForm')(state, 'deliveryMethod');
+    const returnOption = formValueSelector('fourthForm')(state, 'returnOption');
+    return { deliveryMethod, returnOption };
 };
 
 const ConnectedDeliveryForm = connect(mapStateToProps)(ReduxFormWrapped);

@@ -1,38 +1,15 @@
-import React, { useState } from 'react';
-import { Field, reduxForm, InjectedFormProps, formValueSelector } from 'redux-form';
+import React from 'react';
+import { Field, reduxForm, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
-import { Box, Button, Grid, MenuItem } from '@mui/material';
+import { Grid } from '@mui/material';
 import SelectWrapper from '../SelectWrapper';
 import TextFieldWrapper from '../TextFieldWrapper';
-// Category ve Form verisi için yerel tip tanımlamaları
-export interface Category {
-  value: string;
-  label: string;
-}
-
-interface ProductInfoFormData {
-  productName: string;
-  productCategory: string;
-  productDetails: string;
-  productInsurance?: string;
-}
-
-// Ekstra props için interface
-interface OwnProps {
-  productCategory: string,
-  activeStep: number
-  setActiveStep: React.Dispatch<React.SetStateAction<number>>
-  handleBack: () => void
-  handleNext: () => void
-  finished: boolean
-}
-
-// Props türünü genişletme
-type Props = OwnProps & InjectedFormProps<ProductInfoFormData, OwnProps>;
+import ButtonGroup from '../ButtonGroup'
+import { OwnProps, ProductInfoFormData, Props } from './types/types';
 
 const FirstStepForm: React.FC<Props> = ({ handleSubmit, handleNext, finished, productCategory, handleBack, activeStep, setActiveStep }) => (
   <form onSubmit={handleSubmit(handleNext)}>
-    <Grid container spacing={3} px={5} py={12} justifyContent={'center'} alignItems={'center'}>
+    <Grid container spacing={3} px={5} py={12} justifyContent={'center'} alignItems={'flex-start'}>
       <Grid item xs={12} md={6}>
         <Field name="productName" type='text' required component={TextFieldWrapper} label="Ürün Adı" />
       </Grid>
@@ -54,34 +31,36 @@ const FirstStepForm: React.FC<Props> = ({ handleSubmit, handleNext, finished, pr
           <Field name="productInsurance" required component={TextFieldWrapper} label="" type='date' />
         </Grid>
       )}
-      <Grid item xs={12} md={6}>
-        <Field name="productDetails" required component={TextFieldWrapper} label="Ürün Detayları" multiline />
+      <Grid item xs={12} md={12}>
+        <Field name="productDetails" required component={TextFieldWrapper} label="Ürün Detayları" multiline rows={5} />
       </Grid>
-      <Grid item xs={12} md={8} mt={6}>
-        <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-          <Button
-            color="inherit"
-            disabled={activeStep === 0}
-            onClick={handleBack}
-            sx={{ mr: 1 }}
-          >
-            Back
-          </Button>
-          <Box sx={{ flex: '1 1 auto' }} />
-          <Button type='submit'>
-            {finished ? 'Finish' : 'Next'}
-          </Button>
-        </Box>
-      </Grid>
+      <ButtonGroup handleBack={handleBack} activeStep={activeStep} finished={finished} />
     </Grid>
 
   </form>
 );
 
+const validate = (values: any) => {
+  const errors: any = {};
+  const touched: any = {}
+  if (!values.productName || touched.productName) {
+    errors.productName = 'Ürün Adı Giriniz!';
+  }
+  if (!values.productCategory) {
+    errors.productCategory = 'Ürün Kategorisi Seçiniz !'
+  }
+  if (!values.productInsurance) {
+    errors.productInsurance = 'Garanti Süresini Seçiniz !';
+  }
+  if (!values.productDetails) {
+    errors.productDetails = 'Ürün Detayı Giriniz !';
+  }
+  return errors;
+};
 
-// reduxForm tanımı
 const ReduxFormWrapped = reduxForm<ProductInfoFormData, OwnProps>({
   form: 'firstForm',
+  validate,
   destroyOnUnmount: false,
 })(FirstStepForm);
 

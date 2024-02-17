@@ -1,47 +1,43 @@
 import React from 'react';
-import { Field, reduxForm, InjectedFormProps } from 'redux-form';
-import { Box, Button } from '@mui/material';
+import { Field, reduxForm } from 'redux-form';
 import FileInput from '../FileInput/FileInput';
-
-// Form verisi için tip tanımı
-interface ProductImagesFormData {
-    productImages: File[];
-}
-
-// Formun kendi props'ları için tip tanımı
-interface OwnProps {
-    activeStep: number;
-    setActiveStep: React.Dispatch<React.SetStateAction<number>>;
-    handleBack: () => void;
-    handleNext: () => void;
-    finished: boolean;
-}
-
-// Redux Form ve kendi props'larımızı birleştiriyoruz
-type Props = OwnProps & InjectedFormProps<ProductImagesFormData, OwnProps>;
+import ButtonGroup from '../ButtonGroup'
+import { Grid } from '@mui/material';
+import { OwnProps, ProductImagesFormData, Props } from './types/types';
 
 const ThirdStepForm: React.FC<Props> = ({
-    handleSubmit, // Redux Form'dan gelen handleSubmit fonksiyonu
+    handleSubmit,
     handleNext,
     finished,
     handleBack,
     activeStep,
 }) => (
     <form onSubmit={handleSubmit(handleNext)}>
-        <Field
-            name="productImages"
-            component={FileInput}
-            label="Ürün Resimleri Yükle"
-        />
-        <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-            <Button type="submit">
-                {finished ? 'Bitir' : 'İleri'}
-            </Button>
-        </Box>
+        <Grid container spacing={3} px={5} py={10} justifyContent={'center'} alignItems={'flex-start'}>
+            <Grid item xs={12} md={6}>
+                <Field
+                    name="productImages"
+                    component={FileInput}
+                    label="Ürün Resimleri Yükle"
+                    required
+                />
+            </Grid>
+            <ButtonGroup finished={finished} handleBack={handleBack} activeStep={activeStep} />
+        </Grid>
     </form>
 );
 
+const validate = (values: any) => {
+    const errors: any = {};
+    
+    if (!values.productImages || values.productImages.length === 0) {
+        errors.productImages = 'Ürün resmi yüklemek zorunludur';
+    }
+    return errors;
+};
+
 export default reduxForm<ProductImagesFormData, OwnProps>({
-    form: 'productImagesForm', // Formun benzersiz adı
+    form: 'thirdForm',
+    validate,
     destroyOnUnmount: false,
 })(ThirdStepForm);

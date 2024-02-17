@@ -10,12 +10,11 @@ import Typography from '@mui/material/Typography';
 import ThirdStepForm from '../../components/ThirdStep/ThirdStepForm';
 import { CssBaseline, Grid, Paper, ThemeProvider, createTheme } from '@mui/material';
 import FourthStepForm from "../../components/FourthStep/FourthStepForm"
-import FifthStepForm from "../../components/FifthStep/FifthStepForm"
 import FinishStepForm from '../../components/FinishStep/FinishStepForm';
 
 const Home = () => {
   const defaultTheme = createTheme();
-  const [activeStep, setActiveStep] = React.useState<number>(3);
+  const [activeStep, setActiveStep] = React.useState<number>(4);
   const [finished, setFinished] = React.useState<boolean>(false);
 
   const handleNext = () => {
@@ -56,10 +55,6 @@ const Home = () => {
     },
     {
       value: 5,
-      component: <FifthStepForm finished={finished} activeStep={activeStep} setActiveStep={setActiveStep} handleNext={handleNext} handleBack={handleBack} />
-    },
-    {
-      value: 6,
       component: <FinishStepForm finished={finished} activeStep={activeStep} setActiveStep={setActiveStep} handleNext={handleNext} handleBack={handleBack} />
     }
   ];
