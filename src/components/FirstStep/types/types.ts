@@ -19,6 +19,7 @@ export interface OwnProps {
     handleBack: () => void
     handleNext: () => void
     finished: boolean
+    isRead?: boolean
 }
 
 export type Props = OwnProps & InjectedFormProps<ProductInfoFormData, OwnProps>;

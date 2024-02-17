@@ -7,17 +7,18 @@ import TextFieldWrapper from '../TextFieldWrapper';
 import ButtonGroup from '../ButtonGroup'
 import { OwnProps, ProductInfoFormData, Props } from './types/types';
 
-const FirstStepForm: React.FC<Props> = ({ handleSubmit, handleNext, finished, productCategory, handleBack, activeStep, setActiveStep }) => (
+const FirstStepForm: React.FC<Props> = ({ handleSubmit, handleNext, finished, productCategory, handleBack, activeStep, isRead }) => (
   <form onSubmit={handleSubmit(handleNext)}>
     <Grid container spacing={3} px={5} py={12} justifyContent={'center'} alignItems={'flex-start'}>
       <Grid item xs={12} md={6}>
-        <Field name="productName" type='text' required component={TextFieldWrapper} label="Ürün Adı" />
+        <Field name="productName" disabled={isRead} type='text' required component={TextFieldWrapper} label="Ürün Adı" />
       </Grid>
       <Grid item xs={12} md={6} justifyContent={'center'} alignItems={'center'}>
         <Field
           name="productCategory"
           component={SelectWrapper}
           label="Ürün Kategorisi"
+          disabled={isRead}
           required
           categories={[
             { value: 'elektronik', label: 'Elektronik' },
@@ -28,13 +29,17 @@ const FirstStepForm: React.FC<Props> = ({ handleSubmit, handleNext, finished, pr
       </Grid>
       {productCategory === 'elektronik' && (
         <Grid item xs={12} md={6}>
-          <Field name="productInsurance" required component={TextFieldWrapper} label="" type='date' />
+          <Field name="productInsurance" disabled={isRead} required component={TextFieldWrapper} label="" type='date' />
         </Grid>
       )}
       <Grid item xs={12} md={12}>
-        <Field name="productDetails" required component={TextFieldWrapper} label="Ürün Detayları" multiline rows={5} />
+        <Field name="productDetails" disabled={isRead} required component={TextFieldWrapper} label="Ürün Detayları" multiline rows={5} />
       </Grid>
-      <ButtonGroup handleBack={handleBack} activeStep={activeStep} finished={finished} />
+      {
+        isRead ?? (
+          <ButtonGroup handleBack={handleBack} activeStep={activeStep} finished={finished} />
+        )
+      }
     </Grid>
 
   </form>
@@ -58,9 +63,25 @@ const validate = (values: any) => {
   return errors;
 };
 
+const asyncValidate = async (values: { productName: string }) => {
+  const { productName } = values
+  const errors: { productName?: string } = {}
+
+  const existingNames = ["Ürün1", "Ürün2", "Ürün3"]
+
+  if (existingNames.includes(productName)) {
+    errors.productName = 'Bu ürün adı zaten alınmış.'
+    throw errors
+  }
+
+  return errors
+};
+
 const ReduxFormWrapped = reduxForm<ProductInfoFormData, OwnProps>({
   form: 'firstForm',
   validate,
+  asyncValidate,
+  asyncBlurFields: ['productName'],
   destroyOnUnmount: false,
 })(FirstStepForm);
 

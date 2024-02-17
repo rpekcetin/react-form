@@ -1,82 +1,53 @@
-import React, { useState } from 'react';
-import { Field, reduxForm, InjectedFormProps, formValueSelector } from 'redux-form';
+import React from 'react';
 import { connect } from 'react-redux';
-import { Box, Button, Grid, MenuItem } from '@mui/material';
-import SelectWrapper from '../SelectWrapper';
-import TextFieldWrapper from '../TextFieldWrapper';
-// Category ve Form verisi için yerel tip tanımlamaları
-export interface Category {
-    value: string;
-    label: string;
-}
+import { Grid, TextField, Typography } from '@mui/material';
+import FirstStepForm from '../FirstStep/FirstStepForm';
+import SecondStepForm from '../SecondStep/SecondStepForm'
+import ThirdStepForm from '../ThirdStep/ThirdStepForm';
+import FourthStepForm from '../FourthStep/FourthStepForm'
 
-interface ProductInfoFormData {
-    productName: string;
-    productCategory: string;
-    productDetails: string;
-    productInsurance?: string;
-}
-
-// Ekstra props için interface
 interface OwnProps {
-    activeStep: number
-    setActiveStep: React.Dispatch<React.SetStateAction<number>>
-    handleBack: () => void
-    handleNext: () => void
-    finished: boolean
+    activeStep: number;
+    setActiveStep: React.Dispatch<React.SetStateAction<number>>;
+    handleBack: () => void;
+    handleNext: () => void;
+    finished: boolean;
+}
+
+interface StateProps {
+    firstFormValues: any
+    secondFormValues: any
+    thirdFormValues: any
+    fourthFormValues: any
 }
 
 // Props türünü genişletme
-type Props = OwnProps & InjectedFormProps<ProductInfoFormData, OwnProps>;
+type Props = OwnProps & StateProps;
 
-const FinishStepForm: React.FC<Props> = ({ handleSubmit, handleNext, finished, handleBack, activeStep, setActiveStep }) => (
-    <form onSubmit={handleSubmit(handleNext)}>
-        <Grid container spacing={3} px={5} py={12} justifyContent={'center'} alignItems={'center'}>
-            <Grid item xs={12} md={6}>
-                <Field name="productName" type='text' required component={TextFieldWrapper} label="Ürün Adı" />
-            </Grid>
-            <Grid item xs={12} md={6} justifyContent={'center'} alignItems={'center'}>
-                <Field
-                    name="productCategory"
-                    component={SelectWrapper}
-                    label="Ürün Kategorisi"
-                    required
-                    categories={[
-                        { value: 'elektronik', label: 'Elektronik' },
-                        { value: 'kitap', label: 'Kitap' },
-                        // Diğer kategoriler...
-                    ]}
-                />
-            </Grid>
-            <Grid item xs={12} md={6}>
-                <Field name="productDetails" required component={TextFieldWrapper} label="Ürün Detayları" multiline />
-            </Grid>
-            <Grid item xs={12} md={8} mt={6}>
-                <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                    <Button
-                        color="inherit"
-                        disabled={activeStep === 0}
-                        onClick={handleBack}
-                        sx={{ mr: 1 }}
-                    >
-                        Back
-                    </Button>
-                    <Box sx={{ flex: '1 1 auto' }} />
-                    <Button type='submit'>
-                        {finished ? 'Finish' : 'Next'}
-                    </Button>
-                </Box>
-            </Grid>
-        </Grid>
-
-    </form>
+const FinishStepForm: React.FC<Props> = ({ firstFormValues, handleNext, secondFormValues, thirdFormValues, fourthFormValues, handleBack, activeStep, finished, setActiveStep }) => (
+    <>
+        <FirstStepForm finished={finished} isRead activeStep={activeStep} setActiveStep={setActiveStep} handleNext={handleNext} handleBack={handleBack} />
+        <SecondStepForm finished={finished} isRead activeStep={activeStep} handleNext={handleNext} handleBack={handleBack} />
+        <ThirdStepForm finished={finished} isRead activeStep={activeStep} setActiveStep={setActiveStep} handleNext={handleNext} handleBack={handleBack} />
+        <FourthStepForm finished={finished} activeStep={activeStep} setActiveStep={setActiveStep} handleNext={handleNext} handleBack={handleBack} />
+    </>
+    // <Grid container spacing={3} px={5} py={12} justifyContent={'center'} alignItems={'center'}>
+    //     <TextField value={firstFormValues?.productName ?? ''} variant='outlined' disabled label='Ürün Adı' />
+    //     <Typography variant="h6">Form Önizlemesi</Typography>
+    //     <Typography>{`Ürün Adı: ${firstFormValues?.productName}`}</Typography>
+    //     <Typography>{`Ürün Kategorisi: ${firstFormValues?.productCategory}`}</Typography>
+    //     <Typography>{`Teslimat Yöntemi: ${thirdFormValues?.deliveryMethod}`}</Typography>
+    //     <Typography>{`İade Politikası: ${fourthFormValues?.returnPolicy}`}</Typography>
+    // </Grid>
 );
 
+const mapStateToProps = (state: any): StateProps => ({
+    firstFormValues: state.form.firstForm?.values,
+    secondFormValues: state.form.secondForm?.values,
+    thirdFormValues: state.form.thirdForm?.values,
+    fourthFormValues: state.form.fourthForm?.values,
+});
 
-// reduxForm tanımı
-const ReduxFormWrapped = reduxForm<ProductInfoFormData, OwnProps>({
-    form: 'finishForm',
-    destroyOnUnmount: false,
-})(FinishStepForm);
+export default connect(mapStateToProps)(FinishStepForm);
 
-export default ReduxFormWrapped
+

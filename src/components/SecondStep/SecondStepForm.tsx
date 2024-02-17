@@ -6,12 +6,13 @@ import ButtonGroup from '../ButtonGroup'
 import { OwnProps, ProductPricingFormData, Props } from './types/types';
 
 
-const SecondStepForm: React.FC<Props> = ({ handleSubmit, handleNext, finished, handleBack, activeStep, setActiveStep }) => (
+const SecondStepForm: React.FC<Props> = ({ handleSubmit, handleNext, finished, handleBack, activeStep, isRead }) => (
     <form onSubmit={handleSubmit(handleNext)}>
-        <Grid container spacing={3} px={5} py={12} justifyContent={'center'} alignItems={'flex-start'}>
+        <Grid container spacing={3} px={5} py={isRead ? 0 : 12} mt={isRead ? -12 : 0} justifyContent={'center'} alignItems={'flex-start'}>
             <Grid item xs={12} md={6}>
                 <Field
                     name="productPrice"
+                    disabled={isRead}
                     component={TextFieldWrapper}
                     label="Ürün Fiyatı"
                     type="number"
@@ -22,6 +23,7 @@ const SecondStepForm: React.FC<Props> = ({ handleSubmit, handleNext, finished, h
             <Grid item xs={12} md={6}>
                 <Field
                     name="productStock"
+                    disabled={isRead}
                     component={TextFieldWrapper}
                     label="Stok Miktarı"
                     type="number"
@@ -31,6 +33,7 @@ const SecondStepForm: React.FC<Props> = ({ handleSubmit, handleNext, finished, h
             <Grid item xs={12} md={6}>
                 <Field
                     name="productDiscount"
+                    disabled={isRead}
                     component={TextFieldWrapper}
                     defaultValue={0}
                     label="İndirim Oranı (%) (Opsiyonel)"
@@ -38,7 +41,11 @@ const SecondStepForm: React.FC<Props> = ({ handleSubmit, handleNext, finished, h
                     parse={(value: any) => Number(value)}
                 />
             </Grid>
-            <ButtonGroup handleBack={handleBack} activeStep={activeStep} finished={finished} />
+            {
+                isRead ?? (
+                    <ButtonGroup handleBack={handleBack} activeStep={activeStep} finished={finished} />
+                )
+            }
         </Grid>
     </form>
 );

@@ -14,7 +14,7 @@ import FinishStepForm from '../../components/FinishStep/FinishStepForm';
 
 const Home = () => {
   const defaultTheme = createTheme();
-  const [activeStep, setActiveStep] = React.useState<number>(4);
+  const [activeStep, setActiveStep] = React.useState<number>(0);
   const [finished, setFinished] = React.useState<boolean>(false);
 
   const handleNext = () => {
@@ -43,7 +43,7 @@ const Home = () => {
     },
     {
       value: 2,
-      component: <SecondStepForm finished={finished} activeStep={activeStep} setActiveStep={setActiveStep} handleNext={handleNext} handleBack={handleBack} />
+      component: <SecondStepForm finished={finished} activeStep={activeStep} handleNext={handleNext} handleBack={handleBack} />
     },
     {
       value: 3,
@@ -88,7 +88,7 @@ const Home = () => {
                 alignItems: 'center',
               }}
             >
-              <Box sx={{ width: '100%', marginTop: '150px' }}>
+              <Box sx={{ width: '100%', marginTop: '50px' }}>
                 <Stepper activeStep={activeStep}>
                   {steps.map((step) => {
                     const stepProps: { completed?: boolean } = {};
