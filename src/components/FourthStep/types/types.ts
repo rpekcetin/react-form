@@ -16,6 +16,7 @@ export interface OwnProps {
     finished: boolean;
     deliveryMethod?: string
     returnOption?: string
+    isRead?: boolean
 }
 
 export type Props = OwnProps & InjectedFormProps<DeliveryFormData, OwnProps>;

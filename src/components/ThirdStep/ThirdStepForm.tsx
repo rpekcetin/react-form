@@ -14,13 +14,14 @@ const ThirdStepForm: React.FC<Props> = ({
     isRead
 }) => (
     <form onSubmit={handleSubmit(handleNext)}>
-        <Grid container spacing={3} px={5} py={10} justifyContent={'center'} alignItems={'flex-start'}>
+        <Grid container spacing={3} px={5} py={isRead ? 2 : 12} mt={0} justifyContent={'center'} alignItems={'flex-start'}>
             <Grid item xs={12} md={6}>
                 <Field
                     name="productImages"
                     disabled={isRead}
+                    isRead={isRead}
                     component={FileInput}
-                    label="Ürün Resimleri Yükle"
+                    label='Ürün Resimleri'
                     required
                 />
             </Grid>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import TextFieldWrapper from '../TextFieldWrapper';
 import ButtonGroup from '../ButtonGroup'
 import { OwnProps, ProductPricingFormData, Props } from './types/types';
@@ -8,7 +8,10 @@ import { OwnProps, ProductPricingFormData, Props } from './types/types';
 
 const SecondStepForm: React.FC<Props> = ({ handleSubmit, handleNext, finished, handleBack, activeStep, isRead }) => (
     <form onSubmit={handleSubmit(handleNext)}>
-        <Grid container spacing={3} px={5} py={isRead ? 0 : 12} mt={isRead ? -12 : 0} justifyContent={'center'} alignItems={'flex-start'}>
+        <Grid container spacing={3} px={5} py={isRead ? 0 : 12} mt={isRead ? -4 : 0} justifyContent={'center'} alignItems={'flex-start'}>
+            <Grid item xs={12}>
+                <Typography variant='h6' fontWeight={700} textAlign={'center'}>Fiyatlandırma ve Stok</Typography>
+            </Grid>
             <Grid item xs={12} md={6}>
                 <Field
                     name="productPrice"

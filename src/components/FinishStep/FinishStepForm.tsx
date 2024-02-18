@@ -28,8 +28,8 @@ const FinishStepForm: React.FC<Props> = ({ firstFormValues, handleNext, secondFo
     <>
         <FirstStepForm finished={finished} isRead activeStep={activeStep} setActiveStep={setActiveStep} handleNext={handleNext} handleBack={handleBack} />
         <SecondStepForm finished={finished} isRead activeStep={activeStep} handleNext={handleNext} handleBack={handleBack} />
+        <FourthStepForm finished={finished} isRead activeStep={activeStep} setActiveStep={setActiveStep} handleNext={handleNext} handleBack={handleBack} />
         <ThirdStepForm finished={finished} isRead activeStep={activeStep} setActiveStep={setActiveStep} handleNext={handleNext} handleBack={handleBack} />
-        <FourthStepForm finished={finished} activeStep={activeStep} setActiveStep={setActiveStep} handleNext={handleNext} handleBack={handleBack} />
     </>
     // <Grid container spacing={3} px={5} py={12} justifyContent={'center'} alignItems={'center'}>
     //     <TextField value={firstFormValues?.productName ?? ''} variant='outlined' disabled label='Ürün Adı' />

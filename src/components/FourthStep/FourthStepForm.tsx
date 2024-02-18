@@ -4,7 +4,7 @@ import TextFieldWrapper from '../TextFieldWrapper'
 import SelectWrapper from '../SelectWrapper'
 import { connect } from 'react-redux';
 import ButtonGroup from '../ButtonGroup'
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { DeliveryFormData, OwnProps, Props } from './types/types';
 
 const FourthStepForm: React.FC<Props> = ({
@@ -14,15 +14,20 @@ const FourthStepForm: React.FC<Props> = ({
     handleBack,
     activeStep,
     deliveryMethod,
-    returnOption
+    returnOption,
+    isRead
 }) => (
     <form onSubmit={handleSubmit(handleNext)}>
-        <Grid container spacing={3} px={5} py={12} justifyContent={'center'} alignItems={'flex-start'}>
+        <Grid container spacing={3} px={5} py={isRead ? 0 : 12} mt={isRead ? 1 : 0} justifyContent={'center'} alignItems={'flex-start'}>
+            <Grid item xs={12}>
+                <Typography variant='h6' fontWeight={700} textAlign={'center'}>Teslimat Bilgileri</Typography>
+            </Grid>
             <Grid item xs={12} md={6}>
                 <Field
                     name="deliveryMethod"
                     component={SelectWrapper}
                     label="Teslimat Şekli"
+                    disabled={isRead}
                     required
                     categories={[
                         { value: 'cargo', label: 'Kargo' },
@@ -35,6 +40,7 @@ const FourthStepForm: React.FC<Props> = ({
                     name="returnOption"
                     component={SelectWrapper}
                     label="İade Seçenekleri"
+                    disabled={isRead}
                     required
                     categories={[
                         { value: 'returnable', label: 'İade Edilebilir' },
@@ -49,6 +55,7 @@ const FourthStepForm: React.FC<Props> = ({
                             name="shippingCompany"
                             component={SelectWrapper}
                             label="Kargo Şirketi"
+                            disabled={isRead}
                             required
                             categories={[
                                 { value: 'ups', label: 'UPS' },
@@ -63,6 +70,7 @@ const FourthStepForm: React.FC<Props> = ({
                             component={TextFieldWrapper}
                             label="Kargo Ücreti"
                             type="number"
+                            disabled={isRead}
                             required
                             parse={(value: any) => Number(value)}
                         />
@@ -78,6 +86,7 @@ const FourthStepForm: React.FC<Props> = ({
                             component={TextFieldWrapper}
                             label="İade Süresi (Gün)"
                             type="number"
+                            disabled={isRead}
                             required
                         />
                     </Grid>
@@ -89,11 +98,14 @@ const FourthStepForm: React.FC<Props> = ({
                     component={TextFieldWrapper}
                     label="Gönderim Adresi"
                     required
+                    disabled={isRead}
                     multiline
                     rows={5}
                 />
             </Grid>
-            <ButtonGroup handleBack={handleBack} activeStep={activeStep} finished={finished} />
+            {
+                isRead ?? (<ButtonGroup handleBack={handleBack} activeStep={activeStep} finished={finished} />)
+            }
         </Grid>
     </form >
 );

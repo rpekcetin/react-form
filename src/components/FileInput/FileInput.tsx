@@ -1,55 +1,64 @@
-import { Box, Grid, ImageList, ImageListItem, Typography } from '@mui/material';
-import React, { useState } from 'react';
+// FileInput.tsx
+
+import React, { useEffect, useState } from 'react';
 import { WrappedFieldProps } from 'redux-form';
+import { Grid, Typography, Box, ImageList, ImageListItem } from '@mui/material';
+import { FileMeta } from './types/types'
 
 interface FileInputProps extends WrappedFieldProps {
     label: string;
-    name: string
+    isRead?: boolean
 }
 
-const FileInput: React.FC<FileInputProps> = ({ input: { onChange, name }, label, meta: { error } }) => {
-    const [touched, setTouched] = useState<boolean>(false)
-    const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+const FileInput: React.FC<FileInputProps> = ({ input: { value, onChange }, label, isRead }) => {
+    const [files, setFiles] = useState<FileMeta[]>([]);
+
+    useEffect(() => {
+        if (value && Array.isArray(value)) {
+            setFiles(value);
+        }
+    }, [value]);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const files = event.target.files ? Array.from(event.target.files) : [];
-        setSelectedFiles(files);
-        onChange(files);
-        setTouched(true)
+        const selectedFiles = event.target.files ? Array.from(event.target.files) : [];
+        const fileMetas = selectedFiles.map(file => ({
+            name: file.name,
+            size: file.size,
+            preview: URL.createObjectURL(file),
+        }));
+
+        setFiles(fileMetas);
+        onChange(fileMetas); // Form state'ine dosya meta verilerini ekleyin
     };
 
-    console.log(error, touched)
     return (
         <>
             <Grid container justifyContent={'center'} alignItems={'center'} gap={3}>
                 <Typography variant='h6' fontWeight={700} textAlign={'center'}>{label}</Typography>
-                <Box sx={{ width: '100%', height: 250, overflowY: 'scroll', border: '1px ', borderStyle: 'dashed', borderRadius: '10px' }}>
+                <Box sx={{ width: '100%', height: 250, overflowY: 'scroll', border: '1px dashed', borderRadius: '10px' }}>
                     <ImageList variant="masonry" cols={3} gap={8}>
-                        {selectedFiles.map((file, index) => (
+                        {files.map((file, index) => (
                             <ImageListItem key={index}>
                                 <img
-                                    srcSet={`${URL.createObjectURL(file)}`}
-                                    src={`${URL.createObjectURL(file)}`}
-                                    alt={URL.createObjectURL(file)}
+                                    src={file.preview}
+                                    alt={file.name}
                                     loading="lazy"
                                 />
                             </ImageListItem>
                         ))}
                     </ImageList>
                 </Box>
-                {touched && error && (
-                    <Typography color="error" variant="body2" style={{ marginTop: '8px' }}>
-                        {error}
-                    </Typography>
-                )}
-                <input
-                    type="file"
-                    accept='image/*'
-                    onChange={handleFileChange}
-                    multiple
-                    name={name}
-                    required
-                />
+
+                {
+                    isRead ??
+                    <input
+                        type="file"
+                        accept='image/*'
+                        onChange={handleFileChange}
+                        multiple
+                        required
+                        id="file-input"
+                    />}
             </Grid>
         </>
     );

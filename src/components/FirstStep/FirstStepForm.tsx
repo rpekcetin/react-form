@@ -1,7 +1,7 @@
 import React from 'react';
 import { Field, reduxForm, formValueSelector } from 'redux-form';
 import { connect } from 'react-redux';
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import SelectWrapper from '../SelectWrapper';
 import TextFieldWrapper from '../TextFieldWrapper';
 import ButtonGroup from '../ButtonGroup'
@@ -9,7 +9,10 @@ import { OwnProps, ProductInfoFormData, Props } from './types/types';
 
 const FirstStepForm: React.FC<Props> = ({ handleSubmit, handleNext, finished, productCategory, handleBack, activeStep, isRead }) => (
   <form onSubmit={handleSubmit(handleNext)}>
-    <Grid container spacing={3} px={5} py={12} justifyContent={'center'} alignItems={'flex-start'}>
+    <Grid container spacing={3} px={5} py={isRead ? 5 : 12} justifyContent={'center'} alignItems={'flex-start'}>
+      <Grid item xs={12}>
+        <Typography variant='h6' fontWeight={700} textAlign={'center'}>Ürün Bilgileri</Typography>
+      </Grid>
       <Grid item xs={12} md={6}>
         <Field name="productName" disabled={isRead} type='text' required component={TextFieldWrapper} label="Ürün Adı" />
       </Grid>
