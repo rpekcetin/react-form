@@ -1,9 +1,9 @@
 import React from 'react';
-import { Field, reduxForm, formValueSelector } from 'redux-form';
-import TextFieldWrapper from '../TextFieldWrapper'
-import SelectWrapper from '../SelectWrapper'
+import { Field, reduxForm, formValueSelector, FormErrors } from 'redux-form';
+import TextFieldWrapper from '../../TextFieldWrapper'
+import SelectWrapper from '../../SelectWrapper'
 import { connect } from 'react-redux';
-import ButtonGroup from '../ButtonGroup'
+import ButtonGroup from '../../ButtonGroup'
 import { Grid, Typography } from '@mui/material';
 import { DeliveryFormData, OwnProps, Props } from './types/types';
 
@@ -72,12 +72,11 @@ const FourthStepForm: React.FC<Props> = ({
                             type="number"
                             disabled={isRead}
                             required
-                            parse={(value: any) => Number(value)}
+                            parse={(value: number | string) => Number(value)}
                         />
                     </Grid>
                 </>
             )}
-
             {
                 returnOption === 'returnable' && (
                     <Grid item xs={12} md={6}>
@@ -110,12 +109,25 @@ const FourthStepForm: React.FC<Props> = ({
     </form >
 );
 
+const validate = (values: DeliveryFormData): FormErrors<DeliveryFormData> => {
+    const errors: FormErrors<DeliveryFormData> = {};
+
+    if ((values.shippingFee ?? 0) < 0) {
+        errors.shippingFee = 'Ücret Negatif olamaz !';
+    }
+    if (values.returnPeriod < 0) {
+        errors.returnPeriod = 'İade Süresi Negatif olamaz !'
+    }
+    return errors;
+};
+
 const ReduxFormWrapped = reduxForm<DeliveryFormData, OwnProps>({
     form: 'fourthForm',
+    validate,
     destroyOnUnmount: false,
 })(FourthStepForm);
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: DeliveryFormData) => {
     const deliveryMethod = formValueSelector('fourthForm')(state, 'deliveryMethod');
     const returnOption = formValueSelector('fourthForm')(state, 'returnOption');
     return { deliveryMethod, returnOption };

@@ -1,31 +1,40 @@
 import * as React from 'react';
-import FirstStepForm from '../../components/FirstStep/FirstStepForm';
-import SecondStepForm from '../../components/SecondStep/SecondStepForm';
+import FirstStepForm from '../../components/Steps/FirstStep/FirstStepForm';
+import SecondStepForm from '../../components/Steps/SecondStep/SecondStepForm';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import ThirdStepForm from '../../components/ThirdStep/ThirdStepForm';
+import ThirdStepForm from '../../components/Steps/ThirdStep/ThirdStepForm';
 import { CssBaseline, Grid, Paper, ThemeProvider, createTheme } from '@mui/material';
-import FourthStepForm from "../../components/FourthStep/FourthStepForm"
-import FinishStepForm from '../../components/FinishStep/FinishStepForm';
+import FourthStepForm from "../../components/Steps/FourthStep/FourthStepForm"
+import FinishStepForm from '../../components/Steps/FinishStep/FinishStepForm';
+import { useDispatch } from 'react-redux';
+import { reset } from 'redux-form';
+import { StepTypes } from './types/types';
 
 const Home = () => {
   const defaultTheme = createTheme();
+  const dispatch = useDispatch()
   const [activeStep, setActiveStep] = React.useState<number>(0);
   const [finished, setFinished] = React.useState<boolean>(false);
 
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setActiveStep((prevActiveStep: number) => prevActiveStep + 1);
   };
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    setActiveStep((prevActiveStep: number) => prevActiveStep - 1);
   };
 
   const handleReset = () => {
+    dispatch(reset('firstForm'))
+    dispatch(reset('secondForm'))
+    dispatch(reset('thirdForm'))
+    dispatch(reset('fourthForm'))
+    dispatch(reset('finalForm'))
     setActiveStep(0);
     setFinished(false)
   };
@@ -36,7 +45,7 @@ const Home = () => {
     }
   }, [activeStep])
 
-  const steps = [
+  const steps: StepTypes[] = [
     {
       value: 1,
       component: <FirstStepForm finished={finished} activeStep={activeStep} setActiveStep={setActiveStep} handleNext={handleNext} handleBack={handleBack} />
@@ -104,18 +113,20 @@ const Home = () => {
                 </Stepper>
                 {finished ? (
                   <React.Fragment>
-                    <Typography sx={{ mt: 2, mb: 1 }}>
-                      All steps completed - you&apos;re finished
-                    </Typography>
-                    <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                      <Box sx={{ flex: '1 1 auto' }} />
-                      <Button onClick={handleReset}>Reset</Button>
-                    </Box>
+                    <Grid textAlign={'center'} px={5} py={12} mt={1} >
+                      <Typography sx={{ mt: 2, mb: 1 }}>
+                        Ürün Başarıyla Eklendi
+                      </Typography>
+                      <Box mt={10} sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                        <Box sx={{ flex: '1 1 auto' }} />
+                        <Button variant='contained' onClick={handleReset}>Tekrarla</Button>
+                      </Box>
+                    </Grid>
                   </React.Fragment>
                 ) : (
                   <React.Fragment>
                     {
-                      steps?.filter((el: any) => el.value === activeStep + 1).map((data: any, index) => (
+                      steps?.filter((el: StepTypes) => el.value === activeStep + 1).map((data: StepTypes, index) => (
                         <Box key={index}>
                           {data.component}
                         </Box>

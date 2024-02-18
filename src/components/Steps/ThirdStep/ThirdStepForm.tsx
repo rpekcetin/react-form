@@ -1,7 +1,7 @@
 import React from 'react';
-import { Field, reduxForm } from 'redux-form';
-import FileInput from '../FileInput/FileInput';
-import ButtonGroup from '../ButtonGroup'
+import { Field, FormErrors, reduxForm } from 'redux-form';
+import FileInput from '../../FileInput/FileInput';
+import ButtonGroup from '../../ButtonGroup'
 import { Grid } from '@mui/material';
 import { OwnProps, ProductImagesFormData, Props } from './types/types';
 
@@ -34,8 +34,8 @@ const ThirdStepForm: React.FC<Props> = ({
     </form>
 );
 
-const validate = (values: any) => {
-    const errors: any = {};
+const validate = (values: ProductImagesFormData): FormErrors<ProductImagesFormData> => {
+    const errors: FormErrors<ProductImagesFormData> = {};
 
     if (!values.productImages || values.productImages.length === 0) {
         errors.productImages = 'Ürün resmi yüklemek zorunludur';

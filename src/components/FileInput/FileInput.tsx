@@ -1,14 +1,8 @@
-// FileInput.tsx
-
 import React, { useEffect, useState } from 'react';
-import { WrappedFieldProps } from 'redux-form';
 import { Grid, Typography, Box, ImageList, ImageListItem } from '@mui/material';
-import { FileMeta } from './types/types'
+import { FileInputProps, FileMeta } from './types/types'
 
-interface FileInputProps extends WrappedFieldProps {
-    label: string;
-    isRead?: boolean
-}
+
 
 const FileInput: React.FC<FileInputProps> = ({ input: { value, onChange }, label, isRead }) => {
     const [files, setFiles] = useState<FileMeta[]>([]);
@@ -26,9 +20,8 @@ const FileInput: React.FC<FileInputProps> = ({ input: { value, onChange }, label
             size: file.size,
             preview: URL.createObjectURL(file),
         }));
-
         setFiles(fileMetas);
-        onChange(fileMetas); // Form state'ine dosya meta verilerini ekleyin
+        onChange(fileMetas);
     };
 
     return (
@@ -48,7 +41,6 @@ const FileInput: React.FC<FileInputProps> = ({ input: { value, onChange }, label
                         ))}
                     </ImageList>
                 </Box>
-
                 {
                     isRead ??
                     <input

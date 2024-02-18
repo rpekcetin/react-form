@@ -1,10 +1,10 @@
 import React from 'react';
-import { Field, reduxForm, formValueSelector } from 'redux-form';
+import { Field, reduxForm, formValueSelector, FormErrors } from 'redux-form';
 import { connect } from 'react-redux';
-import { Grid, Typography } from '@mui/material';
-import SelectWrapper from '../SelectWrapper';
-import TextFieldWrapper from '../TextFieldWrapper';
-import ButtonGroup from '../ButtonGroup'
+import { Grid, InputLabel, Typography } from '@mui/material';
+import SelectWrapper from '../../SelectWrapper';
+import TextFieldWrapper from '../../TextFieldWrapper';
+import ButtonGroup from '../../ButtonGroup'
 import { OwnProps, ProductInfoFormData, Props } from './types/types';
 
 const FirstStepForm: React.FC<Props> = ({ handleSubmit, handleNext, finished, productCategory, handleBack, activeStep, isRead }) => (
@@ -26,13 +26,15 @@ const FirstStepForm: React.FC<Props> = ({ handleSubmit, handleNext, finished, pr
           categories={[
             { value: 'elektronik', label: 'Elektronik' },
             { value: 'kitap', label: 'Kitap' },
-            // Diğer kategoriler...
+            { value: 'kıyafet', label: 'Kıyafet' },
+            { value: 'kozmetik', label: 'Kozmetik' },
           ]}
         />
       </Grid>
       {productCategory === 'elektronik' && (
         <Grid item xs={12} md={6}>
-          <Field name="productInsurance" disabled={isRead} required component={TextFieldWrapper} label="" type='date' />
+          <InputLabel>Garanti Süresi</InputLabel>
+          <Field name="productInsurance" disabled={isRead} required component={TextFieldWrapper} type='date' />
         </Grid>
       )}
       <Grid item xs={12} md={12}>
@@ -48,10 +50,10 @@ const FirstStepForm: React.FC<Props> = ({ handleSubmit, handleNext, finished, pr
   </form>
 );
 
-const validate = (values: any) => {
-  const errors: any = {};
-  const touched: any = {}
-  if (!values.productName || touched.productName) {
+const validate = (values: ProductInfoFormData): FormErrors<ProductInfoFormData> => {
+  const errors: FormErrors<ProductInfoFormData> = {};
+
+  if (!values.productName) {
     errors.productName = 'Ürün Adı Giriniz!';
   }
   if (!values.productCategory) {
@@ -70,7 +72,7 @@ const asyncValidate = async (values: { productName: string }) => {
   const { productName } = values
   const errors: { productName?: string } = {}
 
-  const existingNames = ["Ürün1", "Ürün2", "Ürün3"]
+  const existingNames = ["Telefon", "Tshirt", "Oje"]
 
   if (existingNames.includes(productName)) {
     errors.productName = 'Bu ürün adı zaten alınmış.'
@@ -89,7 +91,7 @@ const ReduxFormWrapped = reduxForm<ProductInfoFormData, OwnProps>({
 })(FirstStepForm);
 
 const selector = formValueSelector('firstForm');
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: ProductInfoFormData) => {
   const productCategory: string = selector(state, 'productCategory');
   return { productCategory }
 };

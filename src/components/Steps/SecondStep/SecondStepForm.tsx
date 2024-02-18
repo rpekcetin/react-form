@@ -1,10 +1,9 @@
 import React from 'react';
-import { Field, reduxForm } from 'redux-form';
+import { Field, FormErrors, reduxForm } from 'redux-form';
 import { Grid, Typography } from '@mui/material';
-import TextFieldWrapper from '../TextFieldWrapper';
-import ButtonGroup from '../ButtonGroup'
+import TextFieldWrapper from '../../TextFieldWrapper';
+import ButtonGroup from '../../ButtonGroup'
 import { OwnProps, ProductPricingFormData, Props } from './types/types';
-
 
 const SecondStepForm: React.FC<Props> = ({ handleSubmit, handleNext, finished, handleBack, activeStep, isRead }) => (
     <form onSubmit={handleSubmit(handleNext)}>
@@ -19,7 +18,7 @@ const SecondStepForm: React.FC<Props> = ({ handleSubmit, handleNext, finished, h
                     component={TextFieldWrapper}
                     label="Ürün Fiyatı"
                     type="number"
-                    parse={(value: any) => Number(value)}
+                    parse={(value: number) => Number(value)}
                     required
                 />
             </Grid>
@@ -41,7 +40,7 @@ const SecondStepForm: React.FC<Props> = ({ handleSubmit, handleNext, finished, h
                     defaultValue={0}
                     label="İndirim Oranı (%) (Opsiyonel)"
                     type="number"
-                    parse={(value: any) => Number(value)}
+                    parse={(value: number) => Number(value)}
                 />
             </Grid>
             {
@@ -53,8 +52,8 @@ const SecondStepForm: React.FC<Props> = ({ handleSubmit, handleNext, finished, h
     </form>
 );
 
-const validate = (values: ProductPricingFormData) => {
-    const errors: any = {};
+const validate = (values: ProductPricingFormData): FormErrors<ProductPricingFormData> => {
+    const errors: FormErrors<ProductPricingFormData> = {};
 
     if (!values.productPrice) {
         errors.productPrice = 'Ürün fiyatı gereklidir!';

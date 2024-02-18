@@ -6,6 +6,7 @@ export interface DeliveryFormData {
     shippingCompany?: string
     deliveryAddress: string
     returnOption: string;
+    returnPeriod: number,
 }
 
 export interface OwnProps {
