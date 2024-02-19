@@ -28,8 +28,14 @@ To run this project locally, clone the repository and install the dependencies:
 git clone https://github.com/rpekcetin/react-form.git
 cd react-form
 npm install
-npm start
+npm run start
 ```
+
+## Tech Stack
+
+**Client:** React, redux-form, MaterialUI, redux, typescript
+
+**Deploy:** Vercel
 
 ## Screenshots
 
