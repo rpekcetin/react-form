@@ -29,6 +29,7 @@ git clone https://github.com/rpekcetin/react-form.git
 cd react-form
 npm install
 npm start
+```
 
 ## Screenshots
 
