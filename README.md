@@ -29,3 +29,35 @@ git clone https://github.com/rpekcetin/react-form.git
 cd react-form
 npm install
 npm start
+
+## Screenshots
+
+**Product information**
+
+In this form, information about the product is requested. Phone, Tshirt and Nail Polish are used for asynchronous verification of the product name. All fields are mandatory and if you select an electronic product in the category field, you must also fill in the warranty period input.
+
+![App Screenshot](https://rpekcetin.github.io/first.png)
+
+**Pricing and Stock**
+
+In this field, you can enter the product price, stock and discount rate if you wish. Negative numbers are prohibited in all fields.
+
+![App Screenshot](https://rpekcetin.github.io/second.png)
+
+**Product image**
+
+In this field, you need to enter a picture for the products. Please enter at least 1 product picture. Since your information is not recorded, you can use it as you wish.
+
+![App Screenshot](https://rpekcetin.github.io/third.png)
+
+**Delivery Information**
+
+In this field, information such as the delivery method of the product, the return period depending on whether there are return options or not, the cargo company and the shipping fee are requested. All fields are mandatory.
+
+![App Screenshot](https://rpekcetin.github.io/third.png)
+
+**Final Form**
+
+Finally, you can check all the information you have entered for the product and send the product by clicking on the Privacy policies.
+
+![App Screenshot](https://rpekcetin.github.io/third.png)
